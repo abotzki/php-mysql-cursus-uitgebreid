@@ -1,0 +1,37 @@
+
+services:
+  app:
+    image: php:8.3-apache
+    ports:
+      - "8080:80"
+    volumes:
+      - ./public:/var/www/html
+      - ./src:/var/www/src
+    environment:
+      DB_HOST: db
+      DB_NAME: cursus
+      DB_USER: cursus
+      DB_PASS: cursus
+    depends_on:
+      - db
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: cursus
+      MYSQL_USER: cursus
+      MYSQL_PASSWORD: cursus
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./schema:/docker-entrypoint-initdb.d
+  
+  phpmyadmin:
+    image: phpmyadmin:5.2.3-apache
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: cursus
+      PMA_PASSWORD: cursus
+      PMA_ARBITRARY: 1
+    depends_on:
+      - db
